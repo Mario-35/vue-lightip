@@ -1,24 +1,56 @@
 <template>
-  <div role="lightip" :style="{'--lightip-font-size': `${fontSize}px`, '--lightip-color': `${color}` , '--lightip-background-color': `${backgroundColor}` , '--lightip-border': `${borderColor}` }" :lightip-position="position" :lightip-label="label">
+  <div class="lightip" :class="calcsize > 0 ? 'sized' : ''"  :lightip-position="position" :style="styles" :lightip-label="label">
     <slot></slot>
   </div>
 </template>
 <script lang="ts">
-import Vue from 'vue';
+import Vue from "vue";
 
 export default Vue.extend({
-  name: 'Lightip',
+  name: "Lightip",
+  computed: {
+    calcsize(): number {
+      let width: number = 0;
+      switch (this.size) {
+        case "small":
+          width = 0;
+          break;
+        case "medium":
+          width = 150;
+          break;
+        case "large":
+          width = 260;
+          break;
+        default:
+          width = Number(this.size);
+      }
+      return width;
+    },
+    styles(): object {
+      return {
+        "--lightip-font-size": `${this.fontSize}px`,
+        "--lightip-background-color": `${this.backgroundColor}` ,
+        "--lightip-border": `${this.borderColor}`,
+        "--lightip-color": `${this.color}` ,
+        "--lightip-width": `${this.calcsize}px` ,
+      };
+    },
+  },
   props: {
     color: {
-      default: '#ffffff',
+      default: "#ffffff",
       type: String,
     },
     backgroundColor: {
-      default:  '#000000',
+      default:  "#000000",
       type: String,
     },
     borderColor: {
-      default: '#000000',
+      default: "#000000",
+      type: String,
+    },
+    size: {
+      default: "small",
       type: String,
     },
     fontSize: String,
@@ -44,12 +76,12 @@ export default Vue.extend({
   [1] Start Styles
 -------------------------------------------------*/
 
-[lightip-label][role~="lightip"] {
+.lightip {
     position: relative;
   }
   
-  [lightip-label][role~="lightip"]::before,
-  [lightip-label][role~="lightip"]::after {
+  .lightip::before,
+  .lightip::after {
     transform: translate3d(0, 0, 0);
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
@@ -63,12 +95,12 @@ export default Vue.extend({
     transform-origin: top;
   }
   
-  [lightip-label][role~="lightip"]::before {
+  .lightip::before {
     background-size: 100% auto !important;
     content: "";
   }
   
-  [lightip-label][role~="lightip"]::after {
+  .lightip::after {
     background:  var(--lightip-background-color, rgba(17, 17, 17, 0.842));
     border: 1px solid var(--lightip-border, rgba(17, 17, 17, .9));
     border-radius: 4px;
@@ -81,10 +113,10 @@ export default Vue.extend({
     box-sizing: content-box;
   }
   
-  [lightip-label][role~="lightip"]:hover::before,
-  [lightip-label][role~="lightip"]:hover::after,
-  [lightip-label][role~="lightip"]:focus::before,
-  [lightip-label][role~="lightip"]:focus::after {
+  .lightip:hover::before,
+  .lightip:hover::after,
+  .lightip:focus::before,
+  .lightip:focus::after {
     opacity: 1;
     pointer-events: auto;
   }
@@ -95,46 +127,46 @@ export default Vue.extend({
     [2] Position Modifiers
   -------------------------------------------------*/
   
-  [role~="lightip"][lightip-position|="top"]::before {
+.lightip[lightip-position|="top"]::before {
     border-left: 8px solid transparent;
     border-right: 8px solid transparent;
     border-top: 8px solid var(--lightip-border, rgba(17, 17, 17, .9));
     margin-bottom: 4px;
   }
   
-  [role~="lightip"][lightip-position|="top"]::after {
+.lightip[lightip-position|="top"]::after {
     margin-bottom: 11px;
   }
   
-  [role~="lightip"][lightip-position|="top"]::before {
+.lightip[lightip-position|="top"]::before {
     transform: translate3d(-50%, 0, 0);
     bottom: 100%;
     left: 50%;
   }
   
-  [role~="lightip"][lightip-position|="top"]:hover::before {
+.lightip[lightip-position|="top"]:hover::before {
     transform: translate3d(-50%, -5px, 0);
   }
   
-  [role~="lightip"][lightip-position|="top"]::after {
+.lightip[lightip-position|="top"]::after {
     transform: translate3d(-50%, 0, 0);
     bottom: 100%;
     left: 50%;
   }
   
-  [role~="lightip"][lightip-position="top"]:hover::after {
+.lightip[lightip-position="top"]:hover::after {
     transform: translate3d(-50%, -5px, 0);
   }
   
   /* ------------------------------------------------
     [2.1] Top Left
   -------------------------------------------------*/
-  [role~="lightip"][lightip-position="top-left"]::after {
+.lightip[lightip-position="top-left"]::after {
     transform: translate3d(calc(-100% + 16px), 0, 0);
     bottom: 100%;
   }
   
-  [role~="lightip"][lightip-position="top-left"]:hover::after {
+.lightip[lightip-position="top-left"]:hover::after {
     transform: translate3d(calc(-100% + 16px), -5px, 0);
   }
   
@@ -142,12 +174,12 @@ export default Vue.extend({
   /* ------------------------------------------------
     [2.2] Top Right
   -------------------------------------------------*/
-  [role~="lightip"][lightip-position="top-right"]::after {
+.lightip[lightip-position="top-right"]::after {
     transform: translate3d(calc(0% + -16px), 0, 0);
     bottom: 100%;
   }
   
-  [role~="lightip"][lightip-position="top-right"]:hover::after {
+.lightip[lightip-position="top-right"]:hover::after {
     transform: translate3d(calc(0% + -16px), -5px, 0);
   }
   
@@ -155,35 +187,35 @@ export default Vue.extend({
   /* ------------------------------------------------
     [2.3] Bottom
   -------------------------------------------------*/
-  [role~="lightip"][lightip-position|="bottom"]::before {
+.lightip[lightip-position|="bottom"]::before {
     border-left: 8px solid transparent;
     border-right: 8px solid transparent;
     border-bottom: 8px solid var(--lightip-border, rgba(17, 17, 17, .9));
     margin-top: 4px;
   }
   
-  [role~="lightip"][lightip-position|="bottom"]::after {
+.lightip[lightip-position|="bottom"]::after {
     margin-top: 11px;
   }
   
-  [role~="lightip"][lightip-position|="bottom"]::before {
+.lightip[lightip-position|="bottom"]::before {
     transform: translate3d(-50%, -10px, 0);
     bottom: auto;
     left: 50%;
     top: 100%;
   }
   
-  [role~="lightip"][lightip-position|="bottom"]:hover::before {
+.lightip[lightip-position|="bottom"]:hover::before {
     transform: translate3d(-50%, 0, 0);
   }
   
-  [role~="lightip"][lightip-position|="bottom"]::after {
+.lightip[lightip-position|="bottom"]::after {
     transform: translate3d(-50%, -10px, 0);
     top: 100%;
     left: 50%;
   }
   
-  [role~="lightip"][lightip-position="bottom"]:hover::after {
+.lightip[lightip-position="bottom"]:hover::after {
     transform: translate3d(-50%, 0, 0);
   }
   
@@ -191,12 +223,12 @@ export default Vue.extend({
   /* ------------------------------------------------
     [2.4] Bottom Left
   -------------------------------------------------*/
-  [role~="lightip"][lightip-position="bottom-left"]::after {
+.lightip[lightip-position="bottom-left"]::after {
     transform: translate3d(calc(-100% + 16px), -10px, 0);
     top: 100%;
   }
   
-  [role~="lightip"][lightip-position="bottom-left"]:hover::after {
+.lightip[lightip-position="bottom-left"]:hover::after {
     transform: translate3d(calc(-100% + 16px), 0, 0);
   }
   
@@ -204,12 +236,12 @@ export default Vue.extend({
   /* ------------------------------------------------
     [2.5] Bottom Right
   -------------------------------------------------*/
-  [role~="lightip"][lightip-position="bottom-right"]::after {
+.lightip[lightip-position="bottom-right"]::after {
     transform: translate3d(calc(0% + -16px), -10px, 0);
     top: 100%;
   }
   
-  [role~="lightip"][lightip-position="bottom-right"]:hover::after {
+.lightip[lightip-position="bottom-right"]:hover::after {
     transform: translate3d(calc(0% + -16px), 0, 0);
   }
   
@@ -217,8 +249,8 @@ export default Vue.extend({
   /* ------------------------------------------------
     [2.6] Left
   -------------------------------------------------*/
-  [role~="lightip"][lightip-position="left"]::before,
-  [role~="lightip"][lightip-position="left"]::after {
+.lightip[lightip-position="left"]::before,
+.lightip[lightip-position="left"]::after {
     bottom: auto;
     left: auto;
     right: 100%;
@@ -226,19 +258,19 @@ export default Vue.extend({
     transform: translate3d(10px, -50%, 0);
   }
   
-  [role~="lightip"][lightip-position="left"]::before {
+.lightip[lightip-position="left"]::before {
     border-left: 8px solid var(--lightip-border, rgba(17, 17, 17, .9));
     border-top: 8px solid transparent;
     border-bottom: 8px solid transparent;
     margin-right: 4px;
   }
   
-  [role~="lightip"][lightip-position="left"]::after {
+.lightip[lightip-position="left"]::after {
     margin-right: 11px;
   }
   
-  [role~="lightip"][lightip-position="left"]:hover::before,
-  [role~="lightip"][lightip-position="left"]:hover::after {
+.lightip[lightip-position="left"]:hover::before,
+.lightip[lightip-position="left"]:hover::after {
     transform: translate3d(0, -50%, 0);
   }
   
@@ -246,45 +278,36 @@ export default Vue.extend({
   /* ------------------------------------------------
     [2.7] Right
   -------------------------------------------------*/
-  [role~="lightip"][lightip-position="right"]::before,
-  [role~="lightip"][lightip-position="right"]::after {
+.lightip[lightip-position="right"]::before,
+.lightip[lightip-position="right"]::after {
     bottom: auto;
     left: 100%;
     top: 50%;
     transform: translate3d(-10px, -50%, 0);
   }
   
-  [role~="lightip"][lightip-position="right"]::before {
+.lightip[lightip-position="right"]::before {
     border-right: 8px solid var(--lightip-border, rgba(17, 17, 17, .9));
     border-top: 8px solid transparent;
     border-bottom: 8px solid transparent;
     margin-left: 4px;
   }
   
-  [role~="lightip"][lightip-position="right"]::after {
+.lightip[lightip-position="right"]::after {
     margin-left: 11px;
   }
   
-  [role~="lightip"][lightip-position="right"]:hover::before,
-  [role~="lightip"][lightip-position="right"]:hover::after {
+.lightip[lightip-position="right"]:hover::before,
+.lightip[lightip-position="right"]:hover::after {
     transform: translate3d(0, -50%, 0);
   }
   
   /* ------------------------------------------------
     [3] Size
   -------------------------------------------------*/
-  [role~="lightip"][lightip-size="small"]::after {
+.sized::after {
     white-space: initial;
-    width: 80px;
+    width: var(--lightip-width);
   }
   
-  [role~="lightip"][lightip-size="medium"]::after {
-    white-space: initial;
-    width: 150px;
-  }
-  
-  [role~="lightip"][lightip-size="large"]::after {
-    white-space: initial;
-    width: 260px;
-  }
 </style>
